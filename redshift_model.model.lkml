@@ -1,6 +1,6 @@
 # # Make sure this is a connection where the database user has sufficient permissions (per above link)
 
-connection: "demonew_events_ecommerce"
+connection: "performance"
 case_sensitive: no
 
 include: "redshift_*.dashboard"
