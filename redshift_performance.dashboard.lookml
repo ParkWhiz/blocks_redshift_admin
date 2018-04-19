@@ -4,17 +4,17 @@
   rows:
     - elements: [query_time_histogram, longest_queries]
       height: 300
-
+      
     - elements: [modeling_header]
       height: 100
     - elements: [network_distribution_piechart,network_distribution_top_joins]
       height: 300
-
+      
     - elements: [capacity_header]
       height: 100
     - elements: [queries_and_queued_per_hour]
       height: 300
-
+      
 
   #filters:
   elements:
@@ -86,7 +86,7 @@
     title_text: "Modeling"
     subtitle_text: ""
     body_text: ""
-
+    
   - name: network_distribution_piechart
     title: Network distribution breakdown
     type: looker_pie
@@ -117,7 +117,7 @@
       DS_DIST_NONE: "#276300"
       DS_DIST_ALL_INNER: "#5f00cf"
       DS_DIST_ALL_NONE: "#1c8b19"
-
+    
   - name: network_distribution_top_joins
     title: Top Network Distribution Operations
     type: table
@@ -153,14 +153,14 @@
       show_hide: show
       first_last: first
       num_rows: '20'
-
-
+    
+    
   - name: capacity_header
     type: text
     title_text: "Capacity"
     subtitle_text: ""
     body_text: ""
-
+    
   - name: queries_and_queued_per_hour
     title: Queries submitted & queued by hour
     type: looker_line

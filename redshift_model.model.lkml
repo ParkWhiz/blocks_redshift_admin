@@ -7,7 +7,7 @@ include: "redshift_*.dashboard"
 include: "redshift_*.view"
 
 explore: redshift_data_loads {
-  hidden: yes
+   hidden: yes
 }
 
 explore: redshift_db_space {
