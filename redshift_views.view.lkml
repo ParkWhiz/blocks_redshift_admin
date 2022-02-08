@@ -110,6 +110,7 @@ view: redshift_etl_errors {
   }
 }
 
+
 view: redshift_data_loads {
   derived_table: {
     sql: select replace(regexp_substr(filename, '//[a-zA-Z0-9\-]+/'), '/', '') as root_bucket
