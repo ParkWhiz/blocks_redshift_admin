@@ -125,3 +125,8 @@ explore: last_7_days_of_queries {
   hidden: yes
   persist_for: "0 seconds"
 }
+
+explore: stl_tr_conflict {
+  hidden: yes
+  persist_for: "0 seconds"
+}
