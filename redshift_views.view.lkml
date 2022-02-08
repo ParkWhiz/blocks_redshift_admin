@@ -1016,11 +1016,11 @@ view: last_7_days_of_queries {
 
               max(substring (qrytext,1,80)) AS qrytext,
 
-              min(run_minutes) AS "min",
+              min(run_minutes) AS "min in (mins)",
 
-              max(run_minutes) AS "max",
+              max(run_minutes) AS "max in (mins)",
 
-              avg(run_minutes) AS "avg",
+              avg(run_minutes) AS "avg in (mins)",
 
               sum(run_minutes) AS total,
 
