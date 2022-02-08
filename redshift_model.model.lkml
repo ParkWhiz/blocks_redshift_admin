@@ -120,3 +120,8 @@ explore: vacuum_progress {
   hidden: yes
   persist_for: "0 seconds"
 }
+
+explore: last_7_days_of_queries {
+  hidden: yes
+  persist_for: "0 seconds"
+}
