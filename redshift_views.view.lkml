@@ -1015,87 +1015,46 @@ view: last_7_days_of_queries {
               trim(database) as db, count(query) AS n_qry,
 
               max(substring (qrytext,1,80)) AS qrytext,
-
-              min(run_minutes) AS "min in (mins)",
-
-              max(run_minutes) AS "max in (mins)",
-
-              avg(run_minutes) AS "avg in (mins)",
-
+              min(run_minutes) AS "min in mins",
+              max(run_minutes) AS "max in mins",
+              avg(run_minutes) AS "avg in mins",
               sum(run_minutes) AS total,
-
               max(query) AS max_query_id,
-
               max(starttime)::DATE AS last_run,
-
               sum(alerts) AS alerts,
-
               aborted
-
             FROM
-
               (SELECT
-
                  userid,
-
                   label,
-
                   stl_query.query,
-
                 trim(database) AS database,
-
                 trim(querytxt) AS qrytext,
-
                 md5(trim(querytxt)) AS qry_md5,
-
                 starttime,
-
                 endtime,
-
                 (datediff(seconds, starttime,endtime)::numeric(12,2))/60 AS run_minutes,
-
                 alrt.num_events AS alerts,
-
                 aborted
-
               FROM
-
                   stl_query
-
                 LEFT OUTER JOIN
-
                   (SELECT
-
                      query,
-
                      1 as num_events
-
                   FROM
-
                       stl_alert_event_log
-
                   GROUP BY
-
                     query
-
                   ) AS alrt
-
                 on alrt.query = stl_query.query
-
               WHERE userid <> 1 and starttime >=  dateadd(day, -7, current_date)
-
               )
-
             GROUP BY
-
               database,
-
               label,
-
               qry_md5,
-
               aborted
-
             ORDER BY total desc limit 50
              ;;
   }
