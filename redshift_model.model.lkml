@@ -130,3 +130,8 @@ explore: stl_tr_conflict {
   hidden: yes
   persist_for: "0 seconds"
 }
+
+explore: vacuum_cpu_load {
+  hidden: yes
+  persist_for: "0 seconds"
+}
