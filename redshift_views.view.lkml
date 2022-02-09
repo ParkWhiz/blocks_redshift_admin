@@ -416,7 +416,7 @@ view: redshift_queries {
   }
   dimension_group: start {
     type: time
-    timeframes: [raw, minute,second, minute15, hour, hour_of_day, day_of_week, date]
+    timeframes: [raw, minute,second, minute15, hour, hour_of_day, day_of_week, date, week, month, year]
     sql: ${TABLE}.start_time ;;
   }
   dimension: service_class {
