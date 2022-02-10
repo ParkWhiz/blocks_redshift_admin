@@ -135,3 +135,8 @@ explore: vac_cpu_load {
   hidden: yes
   persist_for: "0 seconds"
 }
+
+explore: locked_tables {
+  hidden: yes
+  persist_for: "0 seconds"
+}
