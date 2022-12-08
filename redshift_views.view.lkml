@@ -380,8 +380,9 @@ view: redshift_queries {
   # Recent is last 24 hours of queries
   # (we only see queries related to our rs user_id)
   derived_table: {
-    sql_trigger_value: SELECT FLOOR(EXTRACT(MINUTE from GETDATE())) ;;
-    # sql_trigger_value: SELECT FLOOR((EXTRACT(epoch from GETDATE()) - 60*60*22)/(60*60*24)) ;; #22h
+    #sql_trigger_value: SELECT FLOOR(EXTRACT(MINUTE from GETDATE())) ;;
+    #sql_trigger_value: SELECT FLOOR((EXTRACT(epoch from GETDATE()) - 60*60*22)/(60*60*24)) ;; #22h
+    sql_trigger_value: SELECT CURRENT_DATE;; #once a day at midnight
     sql: SELECT
         wlm.query,
         q.substring::varchar,
@@ -719,20 +720,20 @@ view: redshift_tables {
       type: number
       sql: ${TABLE}.skew_sortkey1 ;;
     }
-    dimension: skew_rows {
-      description: "Ratio of the number of rows in the slice with the most rows to the number of rows in the slice with the fewest rows"
-      type: number
-      sql: ${TABLE}.skew_rows ;;
-      html:
-            {% if value >= 75 %}
-              <span style="color:darkred">{{ rendered_value }}</span>
-            {% elsif value >= 25 %}
-              <span style="color:darkorange">{{ rendered_value }}</span>
-            {% else value >= 75 %}
-              {{ rendered_value }}
-            {% endif %}
-      ;;
-    }
+#    dimension: skew_rows {
+#      description: "Ratio of the number of rows in the slice with the most rows to the number of rows in the slice with the fewest rows"
+#      type: number
+#      sql: ${TABLE}.skew_rows ;;
+#      html:
+#            {% if value >= 75 %}
+#              <span style="color:darkred">{{ rendered_value }}</span>
+#            {% elsif value >= 25 %}
+#              <span style="color:darkorange">{{ rendered_value }}</span>
+#            {% else value >= 75 %}
+#              {{ rendered_value }}
+#            {% endif %}
+#      ;;
+#    }
     measure: count {
       type: count
     }

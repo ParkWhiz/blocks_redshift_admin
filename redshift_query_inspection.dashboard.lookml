@@ -360,7 +360,9 @@
     model: redshift_model
     explore: redshift_tables
     dimensions: [redshift_tables.schema, redshift_tables.table, redshift_tables.rows_in_table,
-      redshift_tables.distribution_style, redshift_tables.skew_rows, redshift_tables.encoded,
+      redshift_tables.distribution_style,
+      #redshift_tables.skew_rows,
+      redshift_tables.encoded,
       redshift_tables.sortkey, redshift_tables.sortkey_encoding, redshift_tables.unsorted,
       redshift_tables.stats_off]
     measures: [redshift_query_execution.total_bytes_scanned, redshift_query_execution.emitted_rows_to_table_rows_ratio,
