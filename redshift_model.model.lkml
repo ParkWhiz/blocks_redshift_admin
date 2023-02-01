@@ -145,3 +145,8 @@ explore: alerts_from_the_last_7_days {
   hidden: yes
   persist_for: "0 seconds"
 }
+
+explore: cpu_utilization {
+  hidden: yes
+  persist_for: "0 seconds"
+}
