@@ -150,3 +150,8 @@ explore: cpu_utilization {
   hidden: yes
   persist_for: "0 seconds"
 }
+
+explore: per_user_cpu {
+  hidden: yes
+  persist_for: "0 seconds"
+}
