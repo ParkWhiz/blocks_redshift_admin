@@ -1497,6 +1497,7 @@ view: cpu_utilization {
     sql: SELECT
        Substring(stq.querytxt, 1, 100) AS querytext,
        AVG(query_cpu_usage_percent) AS avg_cpu,
+       su.usename as user,
        AVG(Datediff(s, starttime, endtime))/60 AS duration_min,
        (AVG(Datediff(s, starttime, endtime))/60)*count(*) as total_daily_duration_min,
        ((AVG(Datediff(s, starttime, endtime))/60)*count(*))/1140.0 as percent_of_day,
@@ -1505,6 +1506,8 @@ view: cpu_utilization {
 FROM   stl_query stq
        JOIN svl_query_metrics svq
          ON stq.query = svq.query
+       JOIN pg_user su
+        ON  stq.userid = su.usesysid
 WHERE  query_cpu_usage_percent IS NOT NULL
        and starttime > sysdate - 1
        and querytext not ilike '%padb_fetch_sample%'
@@ -1528,6 +1531,11 @@ WHERE  query_cpu_usage_percent IS NOT NULL
   dimension: avg_cpu {
     type: number
     sql: ${TABLE}.avg_cpu ;;
+  }
+
+  dimension: user {
+    type: number
+    sql: ${TABLE}.user ;;
   }
 
   dimension: duration_min {
@@ -1559,6 +1567,7 @@ WHERE  query_cpu_usage_percent IS NOT NULL
     fields: [
       querytext,
       avg_cpu,
+      user,
       duration_min,
       total_daily_duration_min,
       percent_of_day,
