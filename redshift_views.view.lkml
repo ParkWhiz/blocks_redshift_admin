@@ -1512,7 +1512,7 @@ WHERE  query_cpu_usage_percent IS NOT NULL
        and starttime > sysdate - 1
        and querytext not ilike '%padb_fetch_sample%'
        and querytext not like '%Vacuum%'
-       GROUP BY 1
+       GROUP BY 1,3
        HAVING count(*) >1
        ORDER BY  6 desc LIMIT 100
  ;;
