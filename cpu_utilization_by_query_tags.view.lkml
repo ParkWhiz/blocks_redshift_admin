@@ -1,4 +1,4 @@
-view: cpu_utilization_by_query_tag {
+view: cpu_utilization_by_query_tags {
   derived_table: {
     sql: SELECT
        label as query_tag,
