@@ -155,3 +155,8 @@ explore: per_user_cpu {
   hidden: yes
   persist_for: "0 seconds"
 }
+
+explore: cpu_utilization_by_query_tag {
+  hidden: yes
+  persist_for: "0 seconds"
+}
