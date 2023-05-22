@@ -160,3 +160,8 @@ explore: cpu_utilization_by_query_tag {
   hidden: yes
   persist_for: "0 seconds"
 }
+
+explore: cpu_within_tag {
+  hidden: yes
+  persist_for: "0 seconds"
+}
