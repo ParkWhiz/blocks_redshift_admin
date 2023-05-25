@@ -382,7 +382,7 @@ view: redshift_queries {
   derived_table: {
     #sql_trigger_value: SELECT FLOOR(EXTRACT(MINUTE from GETDATE())) ;;
     #sql_trigger_value: SELECT FLOOR((EXTRACT(epoch from GETDATE()) - 60*60*22)/(60*60*24)) ;; #22h
-    sql_trigger_value: SELECT CURRENT_DATE;; #once a day at midnight
+    sql_trigger_value: SELECT 1;; #once a day at midnight
     sql: SELECT
         wlm.query,
         q.substring::varchar,
