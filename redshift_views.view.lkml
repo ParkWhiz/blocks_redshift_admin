@@ -1579,20 +1579,35 @@ WHERE  query_cpu_usage_percent IS NOT NULL
 
 view: per_user_cpu {
   derived_table: {
-    sql: SELECT
-      querytext,
-      AVG(avg_cpu) AS avg_cpu,
-      usename AS "user",
-      SUM(task_duration_seconds/60.0)/COUNT(*) AS duration_min,
-      SUM(task_duration_seconds/60.0) as total_daily_duration_min,
-      SUM(task_duration_seconds/60.0)/1140.0 as percent_of_day,
-      SUM(total_daily_cpu) as total_day_CPU,
-      COUNT(*)
-FROM __pw_monitoring.redshift_query_metrics
-WHERE  COALESCE(avg_cpu,0) != 0
-       and starttime > sysdate - 1
-       GROUP BY 1,3
-       ORDER BY  7 desc LIMIT 100
+    sql:
+        SELECT
+           Substring(stq.querytxt, 1, 100) AS querytext,
+           su.usename as user,
+           CASE WHEN stq.label <> 'default'
+                THEN split_part(stq.label,':',1)
+           END AS dag,
+           CASE WHEN split_part(stq.label,':',2) <> ''
+                THEN split_part(stq.label,':',2)||'.sql'
+           END AS etl_script,
+           AVG(query_cpu_usage_percent) AS avg_cpu,
+           AVG(Datediff(s, starttime, endtime))/60 AS duration_min,
+           (AVG(Datediff(s, starttime, endtime))/60)*count(*) as total_daily_duration_min,
+           ((AVG(Datediff(s, starttime, endtime))/60)*count(*))/1140.0 as percent_of_day,
+           AVG(query_cpu_usage_percent)*(((AVG(Datediff(s, starttime, endtime))/60)*count(*))/1140.0) as total_day_CPU,
+           count(*)
+         FROM stl_query stq
+         JOIN svl_query_metrics svq
+           ON stq.query = svq.query
+         JOIN pg_user su
+          ON  stq.userid = su.usesysid
+         WHERE  query_cpu_usage_percent IS NOT NULL
+           and starttime > sysdate - 1
+           and querytext not ilike '%padb_fetch_sample%'
+           and querytext not like '%Vacuum%'
+        GROUP BY 1,2,3,4
+        HAVING count(*) >1
+        ORDER BY 6 desc
+        LIMIT 100
  ;;
   }
 
@@ -1604,6 +1619,16 @@ WHERE  COALESCE(avg_cpu,0) != 0
   dimension: querytext {
     type: string
     sql: ${TABLE}.querytext ;;
+  }
+
+  dimension: dag {
+    type: string
+    sql: ${TABLE}.dag ;;
+  }
+
+  dimension: etl_script {
+    type: string
+    sql: ${TABLE}.etl_script ;;
   }
 
   dimension: avg_cpu {
