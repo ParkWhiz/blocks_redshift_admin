@@ -1583,6 +1583,7 @@ view: per_user_cpu {
       CASE WHEN split_part(query_group,':',2) <> ''
            THEN split_part(query_group,':',2)||'.sql'
       END AS etl_script,
+      query_class,
       SUM(task_duration_seconds/60.0)/COUNT(*) AS duration_min,
       SUM(task_duration_seconds/60.0) as total_daily_duration_min,
       SUM(task_duration_seconds/60.0)/1140.0 as percent_of_day,
@@ -1591,8 +1592,8 @@ view: per_user_cpu {
 FROM pw_monitoring.redshift_query_metrics
 WHERE  COALESCE(avg_cpu,0) != 0
        and starttime > sysdate - 1
-       GROUP BY 1,3,4,5
-       ORDER BY  7 desc LIMIT 100
+       GROUP BY 1,3,4,5,6
+       ORDER BY  8 desc LIMIT 100
  ;;
   }
 
@@ -1614,6 +1615,11 @@ WHERE  COALESCE(avg_cpu,0) != 0
   dimension: etl_script {
     type: string
     sql: ${TABLE}.etl_script ;;
+  }
+
+  dimension: query_class {
+    type: string
+    sql: ${TABLE}.query_class ;;
   }
 
   dimension: avg_cpu {
@@ -1670,6 +1676,7 @@ view: cpu_utilization_by_query_tag {
   derived_table: {
     sql: SELECT
       query_group AS query_tag,
+      query_class,
       querytext,
       AVG(avg_cpu) AS avg_cpu,
       usename AS "user",
@@ -1681,8 +1688,8 @@ view: cpu_utilization_by_query_tag {
 FROM pw_monitoring.redshift_query_metrics
 WHERE  COALESCE(avg_cpu,0) != 0
        and starttime > sysdate - 1
-       GROUP BY 1,2,4
-       ORDER BY  8 desc LIMIT 100
+       GROUP BY 1,2,3,5
+       ORDER BY  9 desc LIMIT 100
 ;;
   }
 
@@ -1694,6 +1701,11 @@ WHERE  COALESCE(avg_cpu,0) != 0
   dimension: query_tag {
     type: string
     sql: ${TABLE}.query_tag ;;
+  }
+
+  dimension: query_class {
+    type: string
+    sql: ${TABLE}.query_class ;;
   }
 
   dimension: querytext {
@@ -1756,6 +1768,7 @@ view: cpu_within_tag {
   derived_table: {
     sql: SELECT
       query_group as query_tag,
+      query_class,
       AVG(avg_cpu) AS avg_cpu,
       COUNT(*) as total_queries,
       SUM(task_duration_seconds/60.0)/COUNT(*) AS duration_min,
@@ -1765,8 +1778,8 @@ view: cpu_within_tag {
 FROM pw_monitoring.redshift_query_metrics
 WHERE starttime > sysdate - 1
 AND query_group != 'default'
-      GROUP BY 1
-      ORDER BY 7 desc
+      GROUP BY 1,2
+      ORDER BY 8 desc
  ;;
   }
 
@@ -1778,6 +1791,11 @@ AND query_group != 'default'
   dimension: query_tag {
     type: string
     sql: ${TABLE}.query_tag ;;
+  }
+
+  dimension: query_class {
+    type: string
+    sql: ${TABLE}.query_class ;;
   }
 
   dimension: avg_cpu {
