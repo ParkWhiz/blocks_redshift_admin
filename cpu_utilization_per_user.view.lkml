@@ -1,20 +1,16 @@
 view: cpu_utilization_per_user {
   derived_table: {
     sql: SELECT
-       Substring(stq.querytxt, 1, 100) AS querytext,
-       AVG(query_cpu_usage_percent) AS avg_cpu,
-       su.usename as user,
-       AVG(Datediff(s, starttime, endtime))/60 AS duration_min,
-       (AVG(Datediff(s, starttime, endtime))/60)*count(*) as total_daily_duration_min,
-       ((AVG(Datediff(s, starttime, endtime))/60)*count(*))/1140.0 as percent_of_day,
-       AVG(query_cpu_usage_percent)*(((AVG(Datediff(s, starttime, endtime))/60)*count(*))/1140.0) as total_day_CPU,
-       count(*)
-FROM   stl_query stq
-       JOIN svl_query_metrics svq
-         ON stq.query = svq.query
-       JOIN pg_user su
-        ON  stq.userid = su.usesysid
-WHERE  query_cpu_usage_percent IS NOT NULL
+      querytext,
+      AVG(avg_cpu) AS avg_cpu,
+      usename as user,
+      SUM(task_duration_seconds/60.0)/COUNT(*) AS duration_min,
+      SUM(task_duration_seconds/60.0) as total_daily_duration_min,
+      SUM(task_duration_seconds/60.0)/1140.0 as percent_of_day,
+      SUM(total_daily_cpu) as total_day_CPU,
+      COUNT(*)
+FROM pw_monitoring.redshift_query_metrics
+WHERE  COALESCE(avg_cpu,0) != 0
        and starttime > sysdate - 1
        and querytext not ilike '%padb_fetch_sample%'
        and querytext not like '%Vacuum%'
