@@ -1583,6 +1583,12 @@ view: per_user_cpu {
       querytext,
       AVG(avg_cpu) AS avg_cpu,
       usename AS "user",
+      CASE WHEN stq.label <> 'default'
+           THEN split_part(stq.label,':',1)
+      END AS dag,
+      CASE WHEN split_part(stq.label,':',2) <> ''
+           THEN split_part(stq.label,':',2)||'.sql'
+      END AS etl_script,
       SUM(task_duration_seconds/60.0)/COUNT(*) AS duration_min,
       SUM(task_duration_seconds/60.0) as total_daily_duration_min,
       SUM(task_duration_seconds/60.0)/1140.0 as percent_of_day,
@@ -1604,6 +1610,16 @@ WHERE  COALESCE(avg_cpu,0) != 0
   dimension: querytext {
     type: string
     sql: ${TABLE}.querytext ;;
+  }
+
+  dimension: dag {
+    type: string
+    sql: ${TABLE}.dag ;;
+  }
+
+  dimension: etl_script {
+    type: string
+    sql: ${TABLE}.etl_script ;;
   }
 
   dimension: avg_cpu {
