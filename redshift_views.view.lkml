@@ -1759,7 +1759,7 @@ view: cpu_within_tag {
       SUM(task_duration_seconds/60.0) as total_daily_duration_min,
       SUM(task_duration_seconds/60.0)/1140.0 as percent_of_day,
       SUM(total_daily_cpu) as total_day_CPU
-FROM __pw_monitoring.redshift_query_metrics
+FROM pw_monitoring.redshift_query_metrics
 WHERE starttime > sysdate - 1
 AND query_group != 'default'
       GROUP BY 1
