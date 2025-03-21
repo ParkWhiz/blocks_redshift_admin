@@ -1588,7 +1588,7 @@ view: per_user_cpu {
       SUM(task_duration_seconds/60.0)/1140.0 as percent_of_day,
       SUM(total_daily_cpu) as total_day_CPU,
       COUNT(*)
-FROM __pw_monitoring.redshift_query_metrics
+FROM pw_monitoring.redshift_query_metrics
 WHERE  COALESCE(avg_cpu,0) != 0
        and starttime > sysdate - 1
        GROUP BY 1,3
